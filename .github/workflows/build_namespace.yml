@@ -21,11 +21,11 @@ jobs:
 
     - name: Install dependencies
       run: |
-        install.packages('roxygen2')
+        install.packages(roxygen2)
 
     - name: Generate documentation
       run: |
-        Rscript -e "devtools::document()"
+        Rscript -e "roxygen2::roxygenise()"
 
     - name: Commit and push updated NAMESPACE and man files
       run: |
