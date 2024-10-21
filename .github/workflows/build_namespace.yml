@@ -21,7 +21,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        install.packages(roxygen2)
+        install.packages(c("roxygen2"))
 
     - name: Generate documentation
       run: |
