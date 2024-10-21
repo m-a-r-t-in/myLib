@@ -22,7 +22,6 @@ jobs:
     - name: Install dependencies
       run: |
         install.packages(c("roxygen2"))
-        remotes::install_deps(dependencies = TRUE)
       shell: Rscript {0}
 
     - name: Generate documentation
