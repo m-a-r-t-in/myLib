@@ -21,7 +21,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        install.packages(c("roxygen2"))
+        install.packages(c("roxygen2","sp","raster"))
       shell: Rscript {0}
 
     - name: Generate documentation
