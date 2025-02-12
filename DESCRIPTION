@@ -15,4 +15,8 @@ LazyData: true
 RoxygenNote: 7.3.2
 Imports:
 	sp,
-	raster 
+	raster,
+    jsonlite,
+    readr,
+    dplyr,
+    terra 
