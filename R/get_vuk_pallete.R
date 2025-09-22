@@ -8,30 +8,38 @@
 #' get_vuk_palette()
 get_vuk_palette <- function(n) {
   palette_hex <- c('#d73526', '#efd621', '#dbce10', '#95c11f', '#3aaa35', '#85cee4', '#85cee4', '#85cee4')
+  
+  if (!is.numeric(n) || length(n) != 1 || n < 1) {
+    stop("Parametr n musí být kladné celé číslo.")
+  }
   if (n > length(palette_hex)) {
     stop("Požadovaný počet barev je větší než počet dostupných ve vzorníku!")
   }
   
-  # Převod do Lab pro výpočet kontrastu
-  lab <- convertColor(col2rgb(palette_hex)/255, from='sRGB', to='Lab', scale.in=1)
+  # Převod do Lab: convertColor očekává matici N x 3 (proto t(col2rgb(...)) / 255)
+  lab <- grDevices::convertColor(
+    t(grDevices::col2rgb(palette_hex)) / 255,
+    from = "sRGB", to = "Lab", scale.in = 1
+  )
   
-  # 1) Vybereme první barvu: ta s nejvyšší průměrnou vzdáleností k ostatním (v Lab)
-  pairdist <- function(i, j) {
-    sqrt(sum((lab[,i] - lab[,j])^2))
-  }
-  avg_d <- sapply(seq_len(ncol(lab)), function(i) {
-    mean(sapply(setdiff(seq_len(ncol(lab)), i), function(j) pairdist(i, j)))
+  # Eukleidovská vzdálenost v Lab mezi řádky i a j
+  pairdist <- function(i, j) sqrt(sum((lab[i, ] - lab[j, ])^2))
+  
+  # 1) První barva = max průměrná vzdálenost k ostatním
+  avg_d <- sapply(seq_len(nrow(lab)), function(i) {
+    mean(sapply(setdiff(seq_len(nrow(lab)), i), function(j) pairdist(i, j)))
   })
-  chosen <- c(which.max(avg_d))
+  chosen_idx <- c(which.max(avg_d))
   
-  # 2) Farthest-first: pokaždé přidáme barvu s maximální minimální vzdáleností k dosud zvoleným
-  while (length(chosen) < n) {
-    cand_scores <- sapply(setdiff(seq_len(ncol(lab)), chosen), function(i) {
-      min(sapply(chosen, function(j) pairdist(i, j)))
+  # 2) Farthest-first: vždy přidáme barvu s max minimální vzdáleností k již vybraným
+  while (length(chosen_idx) < n) {
+    cand <- setdiff(seq_len(nrow(lab)), chosen_idx)
+    cand_scores <- sapply(cand, function(i) {
+      min(sapply(chosen_idx, function(j) pairdist(i, j)))
     })
-    next_id <- setdiff(seq_len(ncol(lab)), chosen)[which.max(cand_scores)]
-    chosen <- c(chosen, next_id)
+    next_id <- cand[which.max(cand_scores)]
+    chosen_idx <- c(chosen_idx, next_id)
   }
   
-  palette_hex[chosen]
+  palette_hex[chosen_idx]
 }
