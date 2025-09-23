@@ -7,7 +7,7 @@
 #' @examples
 #' get_vuk_palette()
 get_vuk_palette <- function(n) {
-  palette_hex <- c('#d73526', '#efd621', '#dbce10', '#95c11f', '#3aaa35', '#85cee4', '#85cee4', '#85cee4')
+  palette_hex <- c('#d73526', '#efd621', '#dbce10', '#95c11f', '#3aaa35', '#85cee4', '#bce4fa', '#6a509d')
   
   if (!is.numeric(n) || length(n) != 1 || n < 1) {
     stop("Parametr n musí být kladné celé číslo.")
