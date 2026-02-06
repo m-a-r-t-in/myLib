@@ -8,7 +8,7 @@
 #' read_rct_tree_info()
 read_rct_tree_info <- function(input.file){
   
-  x <-  read_csv("Buchlovice.laz.treeInfo.txt", comment = "#")
+  x <-  read_csv(input.file, comment = "#")
   x$ID <- c(1:nrow(x))
   x$ID <- x$ID -1
   return(x)
